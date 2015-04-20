@@ -6,6 +6,7 @@ The OI Utilities are the basic programming contest judge and management utilitie
 ## Tools (Plan)
 
 ### Judge support
+* oi-compile
 * oi-sandbox
 * oi-judge
 * oi-report

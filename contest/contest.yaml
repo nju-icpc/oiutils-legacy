@@ -1,0 +1,36 @@
+title: '测试竞赛'
+---
+name: '比赛的第一个问题'
+abbrv: 'plus'
+path: 'testdata/plus/'
+allowed_file:
+    - plus.c
+    - plus.cpp
+    - plus.pas
+time_limit: 1000
+memory_limit: 512
+score: 10
+testcases:
+    -
+        input: plus1.in
+        output: plus1.out
+        time_limit: 100
+    -
+        input: plus2.in
+        output: plus2.out
+        score: 90
+---
+name: '$A+B$ Problem'
+abbrv: 'play'
+path: 'testdata/plus/'
+allowed_file:
+    - play.c
+    - play.cpp
+    - play.pas
+time_limit: 1000
+memory_limit: 512
+score: 10
+testcases:
+    -
+        input: play.in
+        output: play.out
