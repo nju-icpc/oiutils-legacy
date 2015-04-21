@@ -8,5 +8,9 @@ def main():
     cmd = sys.argv[1]
     if cmd not in COMMANDS:
         print("Supported commands: " + ", ".join(COMMANDS))
+        exit(1)
 
-    COMMANDS[cmd](sys.argv[2:])
+    if len(sys.argv) == 2:
+        COMMANDS[cmd]([])
+    else:
+        COMMANDS[cmd](sys.argv[2:])

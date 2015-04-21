@@ -4,9 +4,9 @@ setup(
     name = 'Oiutils',
     version = '0.1',
     license = 'GPLv2',
-    packages = ['oi', 'oi.contest'],
+    packages = ['oi', 'oi.contest', 'oi.sandbox'],
     install_requires = [
-        'pyyaml'
+        'pyyaml', 'psutil'
     ],
     entry_points = '''
         [console_scripts]
