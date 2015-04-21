@@ -1,4 +1,4 @@
-import argparse, resource, subprocess, os, psutil, time, sys
+import argparse, subprocess, os, psutil, time, sys
 
 def kill_tree(p):
     for child in p.children(recursive = True):
@@ -16,13 +16,10 @@ def oi_sandbox(args):
     time_limit = float(options.get('t'))
     memory_limit = float(options.get('m'))
 
-    def prepare():
-        pass
-
     if (len(options.get('args')) == 0):
         parser.parse_args(['-h'])
         
-    p = subprocess.Popen(options.get('args'), shell = False, preexec_fn = prepare)
+    p = subprocess.Popen(options.get('args'), shell = False)
 
     proc = psutil.Process(p.pid)
 
