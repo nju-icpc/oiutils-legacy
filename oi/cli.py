@@ -5,5 +5,8 @@ def main():
     if len(sys.argv) < 2:
         print("Usage: oi command [arguments]")
         exit(1)
-    if sys.argv[1] not in COMMANDS:
+    cmd = sys.argv[1]
+    if cmd not in COMMANDS:
         print("Supported commands: " + ", ".join(COMMANDS))
+
+    COMMANDS[cmd](sys.argv[2:])
