@@ -2,13 +2,16 @@
 import os, yaml
 
 def compile_task(cst, prob):
-    return 'compiled/%s_%s.log' % (cst, prob['abbrv'])
+    return path_join('compiled', '%s_%s.log' % (cst, prob['abbrv']))
 
 def test_task(cst, prob, tid):
-    return 'tested/%s_%s_%s.log' % (cst, prob['abbrv'], str(tid))
+    return path_join('tested', '%s_%s_%s.log' % (cst, prob['abbrv'], str(tid)))
 
 def report_task(cst):
-    return 'report/%s.pdf' % cst
+    return path_join('report', '%s.pdf' % cst)
+
+def path_join(*args):
+    return '/'.join(args)
 
 """
 Takes one argument: the contest's directory path
@@ -16,7 +19,7 @@ Takes one argument: the contest's directory path
 def oi_run_contest(args):
     PATH = args[0]
     YAML_FILE = os.path.join(PATH, 'contest.yaml')
-    PROGRAM_DIR = os.path.join('programs')
+    PROGRAM_DIR = path_join('programs')
 
 
     data = [i for i in yaml.load_all(open(YAML_FILE, "r").read())]
@@ -28,14 +31,14 @@ def oi_run_contest(args):
         for fn in prob['allowed_file']:
             fname = os.path.join(PATH, PROGRAM_DIR, directory, fn)
             if os.path.isfile(fname):
-                return os.path.join(PROGRAM_DIR, directory, fn)
+                return path_join(PROGRAM_DIR, directory, fn)
         return None
      
     def get_contestants():
-        return [i.decode('utf-8') for i in os.listdir(os.path.join(PATH, PROGRAM_DIR)) if not i.startswith('.')]
+        ret = [i for i in os.listdir(unicode(os.path.join(PATH, PROGRAM_DIR))) if not i.startswith('.')]
+        return ret
 
     def gen_dep(task, dep_list, todo_list, phony = False):
-        Makefile
         if phony:
             Makefile.append(".PHONY: " + task)
         Makefile.append(task + ': ' + ' '.join(dep_list))
@@ -102,4 +105,4 @@ def oi_run_contest(args):
 
     write_file("Makefile", '\n'.join(Makefile))
 
-    os.system("cd '%s' && make" % PATH)
+    os.system("cd \"%s\" && make" % PATH)

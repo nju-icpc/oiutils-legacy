@@ -4,6 +4,12 @@
 import re, platform, os, subprocess, yaml, hashlib
 from contest import *
 
+def get_filesystem_encoding():
+    if platform.system() == "Windows": 
+        return 'gbk'
+    else:
+        return 'utf-8'
+    
 def get_processor_name():
     if platform.system() == "Windows":
         return platform.processor()
@@ -20,7 +26,7 @@ def get_processor_name():
 
 def oi_texify_report(args):
     PATH = '.'
-    cst = args[0].decode('utf-8')
+    cst = unicode(args[0], get_filesystem_encoding())
     YAML_FILE = os.path.join(PATH, 'contest.yaml')
     PROGRAM_DIR = os.path.join('programs')
 
@@ -35,9 +41,10 @@ def oi_texify_report(args):
             if os.path.isfile(fname):
                 return os.path.join(PROGRAM_DIR, directory, fn)
         return None
-     
+    
     def get_contestants():
-        return [i.decode('utf-8') for i in os.listdir(os.path.join(PATH, PROGRAM_DIR)) if not i.startswith('.')]
+        ret = [i for i in os.listdir(unicode(os.path.join(PATH, PROGRAM_DIR))) if not i.startswith('.')]
+        return ret
 
     def read_file(fn):
         with open(os.path.join(PATH, fn), "r") as fp:
@@ -55,7 +62,7 @@ def oi_texify_report(args):
     \setCJKmainfont{SimSun}""")
 
     Tex = [TEX_HEADER, '\\begin{document}']
-    Tex.append(u'\\section*{%s -- [选手：%s]}' % (meta['title'], cst)) # 啊啊
+    Tex.append(u'\\section*{%s -- [选手：%s]}' % (meta['title'], cst))
     for prob in problems:
         prob_title = prob['name'] + ' (%s)' % prob['abbrv']
         Tex.append('\\subsection*{%s}' % prob_title)
@@ -65,9 +72,11 @@ def oi_texify_report(args):
             src_name = fn.split(os.path.sep)[-1]
             src = read_file(fn)
             md5 = hashlib.md5(src).hexdigest()[:6]
-            compiled = True
+            
+            executable = '.'.join(log.split('.')[:-1] + ['exe'])
+            compiled = os.path.isfile(executable)
+            Tex.append(u'{\\tt %s}; {\\tt %s} MD5, {\\tt %d}字节 \n' % (src_name, md5, len(src)))
             if compiled:
-                Tex.append(u'{\\tt %s}; {\\tt %s} MD5, {\\tt %d}字节 \\hspace{3cm} {\\bf{编译成功}}\n' % (src_name, md5, len(src)))
                 for (ti, case) in enumerate(prob['testcases']):
                     test = test_task(cst, prob, ti)
                     Tex.append('Test Case \\# %d: ' % (ti+1))
@@ -88,5 +97,5 @@ def oi_texify_report(args):
     Tex.append('\\end{document}')
     write_file(os.path.join('report', cst + '.tex'), '\n'.join(Tex))
     
-    subprocess.call(['bash', '-c', 'cd report && xelatex %s.tex < /dev/null &> /dev/null' % cst])
+    subprocess.call(['bash', '-c', ('cd report && xelatex %s.tex < /dev/null &> /dev/null' % cst).encode(get_filesystem_encoding())])
     os.system("rm -f report/*.aux report/*.log")
