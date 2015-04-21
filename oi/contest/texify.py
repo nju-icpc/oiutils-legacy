@@ -75,7 +75,7 @@ def oi_texify_report(args):
             
             executable = '.'.join(log.split('.')[:-1] + ['exe'])
             compiled = os.path.isfile(executable)
-            Tex.append(u'{\\tt %s}; {\\tt %s} MD5, {\\tt %d}字节 \n' % (src_name, md5, len(src)))
+            Tex.append(u'\\vspace{-12pt}\\rightline{{\\tt %s}; {\\tt %s} MD5, {\\tt %d}字节 }\n' % (src_name, md5, len(src)))
             if compiled:
                 for (ti, case) in enumerate(prob['testcases']):
                     test = test_task(cst, prob, ti)
