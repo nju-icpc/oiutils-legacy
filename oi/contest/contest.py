@@ -4,6 +4,9 @@ import os, yaml
 def compile_task(cst, prob):
     return path_join('compiled', '%s_%s.log' % (cst, prob['abbrv']))
 
+def compile_exec(cst, prob):
+    return path_join('compiled', '%s_%s.exe' % (cst, prob['abbrv']))
+
 def test_task(cst, prob, tid):
     return path_join('tested', '%s_%s_%s.log' % (cst, prob['abbrv'], str(tid)))
 
@@ -71,8 +74,12 @@ def oi_run_contest(args):
                     test = test_task(cst, prob, ti)
                     all_tests.append(test)
                     gen_dep(test, [compile_task(cst, prob)], [
-                        '@echo "Yes" > $@',
-                        '@echo Testing \'#%d\': %s %s' % (ti+1, case['input'], case['output']) # do judge here
+                        '-oi judge -i "%s" -o "%s" -I "%s" -O "%s" "%s" &> $@'
+                            % (prob['input'], prob['output'], 
+                               path_join(prob['path'], case['input']),
+                               path_join(prob['path'], case['output']),
+                               compile_exec(cst, prob)
+                                ),
                     ])
 
     all_reports = []
@@ -105,4 +112,4 @@ def oi_run_contest(args):
 
     write_file("Makefile", '\n'.join(Makefile))
 
-    os.system("cd \"%s\" && make" % PATH)
+    os.system("cd \"%s\" && make clean && make" % PATH)
