@@ -65,7 +65,7 @@ def oi_run_contest(args):
                 log = compile_task(cst, prob)
                 all_logs.append(log)
                 gen_dep(log, [fn], [
-                    '-g++ $< -o $(@:.log=.exe) &> $@' # do compile here
+                    '-oi compile $< -o $(@:.log=.exe) &> $@' # do compile here
                 ])
                 for (ti, case) in enumerate(prob['testcases']):
                     test = test_task(cst, prob, ti)

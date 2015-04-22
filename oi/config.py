@@ -1,13 +1,8 @@
-from contest.contest import oi_run_contest
-from contest.texify import oi_texify_report
-
-def sandbox(args):
-    from sandbox.sandbox import oi_sandbox
-    oi_sandbox(args)
-
+# maps a command to its handler
 COMMANDS = {
-    'sandbox': lambda x: sandbox(x),
-    'judge': None,
-    'run': oi_run_contest,
-    'texify': oi_texify_report,
+	'compile': 'compile.compile.oi_compile',
+    'sandbox': 'sandbox.sandbox.oi_sandbox',
+    'judge': 'judge.judge.oi_judge',
+    'run': 'contest.contest.oi_run_contest',
+    'texify': 'contest.texify.oi_texify_report',
 }

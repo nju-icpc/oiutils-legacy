@@ -1,9 +1,12 @@
 import argparse, subprocess, os, psutil, time, sys
 
 def kill_tree(p):
-    for child in p.children(recursive = True):
-        child.terminate()
-    p.terminate()
+    try:
+        for child in p.children(recursive = True):
+            child.terminate()
+        p.terminate()
+    except:
+        pass
 
 def oi_sandbox(args):
     if len(args) == 0: args = ['-h']
@@ -20,13 +23,11 @@ def oi_sandbox(args):
         parser.parse_args(['-h'])
         
     p = subprocess.Popen(options.get('args'), shell = False)
-
     proc = psutil.Process(p.pid)
 
     start_time = time.time()
 
-    memory_use = 0
-    time_use = 0
+    (memory_use, time_use) = (0.0, 0.0)
 
     while True:
         current_time = time.time()
@@ -37,10 +38,9 @@ def oi_sandbox(args):
         except:
             break
 
-        if time_use > time_limit or memory_use > memory_limit:
-            break
-
-        if proc.status() in [psutil.STATUS_ZOMBIE, psutil.STATUS_DEAD]:
+        if time_use > time_limit or \
+           memory_use > memory_limit or \
+           proc.status() in [psutil.STATUS_ZOMBIE, psutil.STATUS_DEAD]:
             break
 
         time.sleep(0.01)

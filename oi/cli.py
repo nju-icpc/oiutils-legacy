@@ -1,16 +1,25 @@
 import sys
 from config import *
 
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: oi command [arguments]")
-        exit(1)
-    cmd = sys.argv[1]
-    if cmd not in COMMANDS:
-        print("Supported commands: " + ", ".join(COMMANDS))
-        exit(1)
+def print_usage():
+    print(
+"""Usage: oi command [arguments]")
+Supported commands:
+  sandbox - put a program run with resource limit
+  judge
+  run
+  texify""")
+    exit(1)
 
-    if len(sys.argv) == 2:
-        COMMANDS[cmd]([])
-    else:
-        COMMANDS[cmd](sys.argv[2:])
+def main():
+    if len(sys.argv) < 2: print_usage()
+
+    cmd = sys.argv[1]
+    if cmd not in COMMANDS: print_usage()
+
+    f = ['oi'] + COMMANDS[cmd].split('.')
+    mod = __import__('.'.join(f[:-1]), fromlist=[''])
+    func = mod.__dict__[f[-1]]
+
+    args = sys.argv[2:]
+    func(args)
