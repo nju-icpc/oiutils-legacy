@@ -29,7 +29,7 @@ def oi_judge(args):
     except:
         print "Cannot create input file"
 
-    os.system('cd "%s" && %s' %  (tmpdir, 'oi sandbox a.exe') )
+    os.system('cd "%s" && %s' %  (tmpdir, 'oi sandbox ./a.exe') )
 
     O = os.path.join(tmpdir, ofname)
     A = ansfile
@@ -38,4 +38,4 @@ def oi_judge(args):
         print "No output"
         return
 
-    os.system('diff --strip-trailing-cr "%s" "%s"' % (O, A))
+    os.system('oi fc "%s" "%s"' % (O, A))

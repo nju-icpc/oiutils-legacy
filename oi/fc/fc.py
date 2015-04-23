@@ -37,7 +37,7 @@ def oi_fc(args):
 
         for i in range(0, len(lines1)):
             if lines1[i] != lines2[i]:
-                verdict(False, "Different on line #%d" % (i + 1))
+                verdict(False, "Different on line %d" % (i + 1))
 
         verdict(True, "OK")
     except Exception, e:
