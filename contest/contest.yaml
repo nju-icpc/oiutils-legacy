@@ -21,6 +21,38 @@ testcases:
         input: plus2.in
         output: plus2.out
         score: 90
+    -
+        input: plus3.in
+        output: plus3.out
+        score: 90
+    -
+        input: plus4.in
+        output: plus4.out
+        score: 90
+    -
+        input: plus5.in
+        output: plus5.out
+        score: 90
+    -
+        input: plus5.in
+        output: plus5.out
+        score: 90
+    -
+        input: plus5.in
+        output: plus5.out
+        score: 90
+    -
+        input: plus5.in
+        output: plus5.out
+        score: 90
+    -
+        input: plus5.in
+        output: plus5.out
+        score: 90
+    -
+        input: plus5.in
+        output: plus5.out
+        score: 90
 ---
 name: '$A+B$ Problem'
 abbrv: 'play'
@@ -31,6 +63,23 @@ allowed_file:
     - play.pas
 input: 'play.in'
 output: 'play.out'
+time_limit: 1000
+memory_limit: 512
+score: 10
+testcases:
+    -
+        input: play.in
+        output: play.out
+---
+name: '不可做问题'
+abbrv: 'nothing'
+path: 'testdata/nothing/'
+allowed_file:
+    - nothing.c
+    - nothing.cpp
+    - nothing.pas
+input: 'nothing.in'
+output: 'nothing.out'
 time_limit: 1000
 memory_limit: 512
 score: 10

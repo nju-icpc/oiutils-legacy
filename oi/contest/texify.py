@@ -9,7 +9,7 @@ def get_filesystem_encoding():
         return 'gbk'
     else:
         return 'utf-8'
-    
+
 def get_processor_name():
     if platform.system() == "Windows":
         return platform.processor()
@@ -55,17 +55,26 @@ def oi_texify_report(args):
             fp.write(data.encode('utf-8'))
 
     TEX_HEADER = (
-    """ % !Mode:: "TeX:UTF-8"
-    \documentclass[12pt,a4paper]{article}
-    \usepackage{xltxtra,fontspec,xunicode}
-    \usepackage[slantfont,boldfont]{xeCJK} 
-    \setCJKmainfont{SimSun}""")
+""" % !Mode:: "TeX:UTF-8"
+\documentclass[10pt,a4paper]{article}
+\usepackage{xltxtra,fontspec,xunicode}
+\usepackage[slantfont,boldfont]{xeCJK} 
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\\rhead{}
+\lfoot{}
+\\rfoot{}%{\\thepage}
+\setlength{\parindent}{0cm}
+\setCJKmainfont{SimSun}""")
 
     Tex = [TEX_HEADER, '\\begin{document}']
+    Tex.append('\\cfoot{--- {\\sf oiutils} and \XeTeX, %s ---}' % get_processor_name())
+    Tex.append('\\rhead{%s}' % cst)
     Tex.append(u'\\section*{%s -- [选手：%s]}' % (meta['title'], cst))
     for prob in problems:
         prob_title = prob['name'] + ' (%s)' % prob['abbrv']
-        Tex.append('\\subsection*{%s}' % prob_title)
         fn = find_source(cst, prob)
         if fn is not None:
             log = compile_task(cst, prob)
@@ -75,25 +84,25 @@ def oi_texify_report(args):
             
             executable = '.'.join(log.split('.')[:-1] + ['exe'])
             compiled = os.path.isfile(executable)
-            Tex.append(u'\\vspace{-12pt}\\rightline{{\\tt %s}; {\\tt %s} MD5, {\\tt %d}字节 }\n' % (src_name, md5, len(src)))
+            Tex.append(u'\\subsection*{%s{\\normalsize\\dotfill\\tt %s (%s, %d字节)}}\n' % (prob_title, src_name, md5, len(src)))
             if compiled:
                 for (ti, case) in enumerate(prob['testcases']):
                     test = test_task(cst, prob, ti)
                     Tex.append('Test Case \\# %d: ' % (ti+1))
-                    Tex.append(read_file(test_task(cst, prob, ti)))
+                    Tex.append(
+                    '%s\n'
+                    % read_file(test_task(cst, prob, ti))[:10])
             else:
                 Tex.append(u'编译错误。')
         else:
+            Tex.append(u'\\subsection*{%s}' % prob_title)
             Tex.append(u'找不到文件。')
 
-    Tex.append('\\vspace{2cm}')
+    Tex.append('\n\\vfill\n')
     Tex.append(u'\n选手签字 \\underline{\\vspace{4cm}} 教师签字\n')
     Tex.append(u'签字代表对评测结果确认无误。\n')
+    Tex.append('\n\\vspace{1cm}\n')
 
-    cpu = get_processor_name()
-    memory = '4GB'
-    Tex.append(u'(评测机：%s / %s)\n' % (cpu, memory))
-    
     Tex.append('\\end{document}')
     write_file(os.path.join('report', cst + '.tex'), '\n'.join(Tex))
     
