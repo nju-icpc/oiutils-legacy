@@ -1,6 +1,6 @@
 Oiutils
 =======
-Oiutils is a collection of command-line tools for programming contest aid, program-based contest hosting and teaching support. We tried to keep every tool minimum, do one thing and do it well, and we encourage users combine these tools together
+Oiutils is a collection of *portable* command-line tools for programming contest aid, program-based contest hosting and teaching support. We tried to keep every tool minimum, do one thing and do it well, and we encourage users piping these tools together to achieve their goals.
 
 ## Tools Overview
 
@@ -8,7 +8,7 @@ Oiutils is a collection of command-line tools for programming contest aid, progr
 
 * oi-compile: compile a source code into binary. This script automatically tries to compile a single source file  into an executable using right compiler according to its file extension.
 * oi-sandbox: run any command with specified time and memory limit. Memory consumption and time usage are returned.
-* oi-fc (PLANNED): allow user to specify "fc scripts" to conduct file content comparisons (e.g., comparing floats within certain error tolerance).
+* oi-fc (PLANNED): an enhanced version of cmp/diff that allow user to specify simple "fc scripts" to compare output files (e.g., comparing floats within certain error tolerance).
 * oi-judge: a simple script that (1) create a temporary directory, (2) put test input and executable in this directory, (3) run the executable with time and memory limit, and (4) calls an evaluation script to return judge results.
 
 ### Programming contest hosting
@@ -23,3 +23,11 @@ Oiutils is a collection of command-line tools for programming contest aid, progr
 
 ### Visualization
 * oi-vis
+
+## Installation
+
+Install using the following command:
+
+	python setup.py install
+
+There are a few dependences: pyyaml, psutil.

@@ -5,4 +5,5 @@ COMMANDS = {
     'judge': 'judge.judge.oi_judge',
     'run': 'contest.contest.oi_run_contest',
     'texify': 'contest.texify.oi_texify_report',
+    'fc': 'fc.fc.oi_fc',
 }

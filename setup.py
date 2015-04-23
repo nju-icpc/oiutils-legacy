@@ -4,7 +4,12 @@ setup(
     name = 'Oiutils',
     version = '0.1',
     license = 'GPLv2',
-    packages = ['oi', 'oi.contest', 'oi.sandbox', 'oi.compile', 'oi.judge'],
+    packages = ['oi',
+        'oi.contest',
+        'oi.sandbox',
+        'oi.compile',
+        'oi.judge',
+        'oi.fc'],
     install_requires = [
         'pyyaml', 'psutil'
     ],

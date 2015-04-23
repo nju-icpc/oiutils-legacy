@@ -8,3 +8,5 @@
 *.pyc
 *.o
 *.class
+*.exe
+*.out
