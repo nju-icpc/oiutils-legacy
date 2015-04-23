@@ -4,12 +4,6 @@
 import re, platform, os, subprocess, yaml, hashlib
 from contest import *
 
-def get_filesystem_encoding():
-    if platform.system() == "Windows": 
-        return 'gbk'
-    else:
-        return 'utf-8'
-
 def get_system_info():
     if platform.system() == "Windows":
         return platform.system() + ' ' + platform.release()
@@ -26,6 +20,7 @@ def get_system_info():
 
 def oi_texify_report(args):
     PATH = '.'
+    cst_raw = args[0]
     cst = unicode(args[0], get_filesystem_encoding())
     YAML_FILE = os.path.join(PATH, 'contest.yaml')
     PROGRAM_DIR = os.path.join('programs')
@@ -50,6 +45,10 @@ def oi_texify_report(args):
         with open(os.path.join(PATH, fn), "r") as fp:
             return fp.read().decode('utf-8')
 
+    def read_file_raw(fn):
+         with open(os.path.join(PATH, fn), "r") as fp:
+            return fp.read()
+       
     def write_file(fn, data):
         with open(os.path.join(PATH, fn), "w") as fp:
             fp.write(data.encode('utf-8'))
@@ -66,12 +65,13 @@ def oi_texify_report(args):
 \chead{}
 \\rhead{}
 \lfoot{}
+\\cfoot{}
 \\rfoot{}%{\\thepage}
 \setlength{\parindent}{0cm}
 \setCJKmainfont{SimSun}""")
 
     Tex = [TEX_HEADER, '\\begin{document}']
-    Tex.append('\\cfoot{--- {\\sf oiutils} and \XeTeX, %s ---}' % get_system_info())
+#    Tex.append('\\cfoot{--- {\\sf oiutils} and \XeTeX, %s ---}' % get_system_info())
     Tex.append('\\rhead{%s}' % cst)
     Tex.append(u'\\section*{%s -- [%s]}' % (meta['title'], cst))
     total_score = 0
@@ -82,9 +82,9 @@ def oi_texify_report(args):
         if fn is not None:
             log = compile_task(cst, prob)
             src_name = fn.split(os.path.sep)[-1]
-            src = read_file(fn)
+            src = read_file_raw(fn)
             md5 = hashlib.md5(src).hexdigest()[:6]
-            Tex.append(u'\\subsection*{%s{\\normalsize\\dotfill\\tt %s (%s, %d字节)}}\n' % (prob_title, src_name, md5, len(src)))
+            Tex.append(u'\\subsection*{%s{\\normalsize~\\dotfill~\\tt %s (%s, %d字节)}}\n' % (prob_title, src_name, md5, len(src)))
         Tex.append('\\begin{multicols}{2}')
         if fn is not None:
             executable = '.'.join(log.split('.')[:-1] + ['exe'])
@@ -98,7 +98,7 @@ def oi_texify_report(args):
                     case_score = int(float(case_score) * float(res[-1]))
                     prob_score += case_score
                     Tex.append(u'测试点\\#%d: ' % (ti+1))
-                    Tex.append(u'%s\\dotfill~%d分\n' % (res[-2], case_score))
+                    Tex.append(u'%s~\\dotfill~%d分\n' % (res[-2], case_score))
                 total_score += prob_score
             else:
                 Tex.append(u'编译错误。')
@@ -106,18 +106,19 @@ def oi_texify_report(args):
             Tex.append(u'\\subsection*{%s}' % prob_title)
             Tex.append(u'找不到文件。')
         Tex.append('\\end{multicols}')
-        Tex.append(u'\\hfill~本题得分： %d\n' % prob_score)
+        Tex.append(u'\\hfill~本题得分： %d\n\\vfill' % prob_score)
 
     Tex.append('\n\\vfill\n')
     Tex.append(u'{\Large \\hfill总分: %d}\n' % total_score)
     Tex.append(u'\\hfill\\begin{tabular}{r} \\vspace{1.5cm}\\hspace{4cm} \\\\ \\hline 选手确认签字\end{tabular}')
     Tex.append('\\hspace{1em}')
     Tex.append(u'\\begin{tabular}{r} \\vspace{1.5cm}\\hspace{4cm} \\\\ \\hline 指导教师确认签字\end{tabular}')
-    Tex.append('\n\\vspace{0.3cm}')
-    Tex.append(u'\\hfill签字即代表对此评测结果表示认可。')
 
     Tex.append('\\end{document}')
     write_file(os.path.join('report', cst + '.tex'), '\n'.join(Tex))
     
-    subprocess.call(['bash', '-c', ('cd report && xelatex %s.tex < /dev/null &> /dev/null' % cst).encode(get_filesystem_encoding())])
+    cmd = 'xelatex "%s.tex" < /dev/null &> /dev/null' % cst
+    cmd = cmd.encode(get_filesystem_encoding())
+
+    subprocess.call(['bash', '-c', ('cd report && %s' % cmd)])
     os.system("rm -f report/*.aux report/*.log")

@@ -42,7 +42,7 @@ def oi_fc(args):
 
         for i in range(0, len(lines1)):
             if lines1[i] != lines2[i]:
-                verdict(False, "错误(第%d行)" % (i + 1))
+                verdict(False, "错误")
         exit(0)
     except Exception, e:
         print e

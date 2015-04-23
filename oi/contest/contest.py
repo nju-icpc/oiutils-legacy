@@ -1,5 +1,11 @@
 #!/usr/bin/python
-import os, yaml
+import os, yaml, platform
+
+def get_filesystem_encoding():
+    if platform.system() == "Windows": 
+        return 'gbk'
+    else:
+        return 'utf-8'
 
 def compile_task(cst, prob):
     return path_join('compiled', '%s_%s.log' % (cst, prob['abbrv']))
@@ -75,10 +81,17 @@ def oi_run_contest(args):
                     all_tests.append(test)
                     ifn = path_join(prob['path'], case['input'])
                     ofn = path_join(prob['path'], case['output'])
+                    tl = "1.0"
+                    ml = "64"
+                    tl = prob.get('time_limit', tl)
+                    ml = prob.get('memory_limit', ml)
+                    tl = case.get('time_limit', tl)
+                    ml = case.get('memory_limit', ml)
                      
                     gen_dep(test, [compile_task(cst, prob), ifn, ofn], [
-                        '-oi judge -i "%s" -o "%s" -I "%s" -O "%s" "%s" &> $@'
-                            % (prob['input'], prob['output'],
+                        '-oi judge -tl "%s" -ml "%s" -i "%s" -o "%s" -I "%s" -O "%s" "%s" &> $@'
+                            % (tl, ml,
+                               prob['input'], prob['output'],
                                ifn, ofn,
                                compile_exec(cst, prob)
                                 ),

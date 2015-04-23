@@ -13,6 +13,8 @@ def verdict(yes, msg):
 def oi_judge(args):
     if len(args) == 0: args = ['-h']
     parser = argparse.ArgumentParser(description = 'judge a file with input and output')
+    parser.add_argument('-tl', help = 'time limit (seconds)', default = '1')
+    parser.add_argument('-ml', help = 'memory limit (megabytes)', default = '64')
     parser.add_argument('-I', help = 'input file path')
     parser.add_argument('-O', help = 'answer file path')
     parser.add_argument('-i', help = 'input file name (can be stdin)')
@@ -21,6 +23,8 @@ def oi_judge(args):
     options = vars(parser.parse_args(args))
 
     execfile = options.get('execfile')[0]
+    tl = options.get('tl')
+    ml = options.get('ml')
     ifname = options.get('i')
     ofname = options.get('o')
     infile = options.get('I')
@@ -38,7 +42,7 @@ def oi_judge(args):
     except:
         verdict(False, "读取输入文件失败")
 
-    ret = os.system('cd "%s" && %s' %  (tmpdir, 'oi sandbox ./a.exe') )
+    ret = os.system('cd "%s" && %s' %  (tmpdir, 'oi sandbox -t "%s" -m "%s" ./a.exe' % (tl, ml)) )
     if ret != 0:
         exit(ret)
 
