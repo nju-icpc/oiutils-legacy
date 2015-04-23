@@ -1,4 +1,4 @@
-title: '测试竞赛'
+title: 'JSOI2015第三轮选拔赛'
 ---
 name: '比赛的第一个问题'
 abbrv: 'plus'
@@ -11,48 +11,48 @@ allowed_file:
     - plus.pas
 time_limit: 1000
 memory_limit: 512
-score: 10
+score: 55
 testcases:
     -
         input: plus1.in
         output: plus1.out
-        time_limit: 100
+        time_limit: 20
     -
         input: plus2.in
         output: plus2.out
-        score: 90
+        score: 1
     -
-        input: plus3.in
-        output: plus3.out
-        score: 90
+        input: plus2.in
+        output: plus2.out
+        score: 2
     -
-        input: plus4.in
-        output: plus4.out
-        score: 90
+        input: plus2.in
+        output: plus2.out
+        score: 3
     -
-        input: plus5.in
-        output: plus5.out
-        score: 90
+        input: plus2.in
+        output: plus2.out
+        score: 4
     -
-        input: plus5.in
-        output: plus5.out
-        score: 90
+        input: plus2.in
+        output: plus2.out
+        score: 5
     -
-        input: plus5.in
-        output: plus5.out
-        score: 90
+        input: plus2.in
+        output: plus2.out
+        score: 6
     -
-        input: plus5.in
-        output: plus5.out
-        score: 90
+        input: plus2.in
+        output: plus2.out
+        score: 7
     -
-        input: plus5.in
-        output: plus5.out
-        score: 90
+        input: plus2.in
+        output: plus2.out
+        score: 8
     -
-        input: plus5.in
-        output: plus5.out
-        score: 90
+        input: plus2.in
+        output: plus2.out
+        score: 9
 ---
 name: '$A+B$ Problem'
 abbrv: 'play'

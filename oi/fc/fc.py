@@ -1,9 +1,14 @@
+# -*- coding: utf-8 -*-
 import argparse
 
 def verdict(yes, msg):
     print msg
-    if yes: exit(0)
-    else: exit(1)
+    if yes:
+        print "1.0"
+        exit(0)
+    else:
+        print "0.0"
+        exit(1)
 
 """
 Compares two files line-by-line, with head and trailing whitespaces stripped out
@@ -27,19 +32,18 @@ def oi_fc(args):
             with open(f2, "r") as fp:
                 L2 = fp.read()
         except:
-            verdict(False, "Open file failed")
+            verdict(False, "无输出")
 
         lines1 = [l.strip() for l in L1.strip().split('\n')]
         lines2 = [l.strip() for l in L2.strip().split('\n')]
 
         if len(lines1) != len(lines2):
-            verdict(False, "Incorrect line amount")
+            verdict(False, "错误(行数不匹配)")
 
         for i in range(0, len(lines1)):
             if lines1[i] != lines2[i]:
-                verdict(False, "Different on line %d" % (i + 1))
-
-        verdict(True, "OK")
+                verdict(False, "错误(第%d行)" % (i + 1))
+        exit(0)
     except Exception, e:
         print e
-        verdict(False, "Error")
+        verdict(False, "出错")

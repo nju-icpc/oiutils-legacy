@@ -1,4 +1,14 @@
+# -*- coding: utf-8 -*-
 import argparse, subprocess, os, psutil, time, sys
+
+def verdict(yes, msg):
+    print msg
+    if yes:
+        print "1.0"
+        exit(0)
+    else:
+        print "0.0"
+        exit(1)
 
 def kill_tree(p):
     try:
@@ -30,26 +40,23 @@ def oi_sandbox(args):
     (memory_use, time_use) = (0.0, 0.0)
 
     while True:
-        current_time = time.time()
-
         try:
+            current_time = time.time()
             memory_use = max(memory_use, proc.memory_info().rss / 1024.0 / 1024.0)
             time_use = current_time - start_time
+            if time_use > time_limit or \
+               memory_use > memory_limit or \
+               proc.status() in [psutil.STATUS_ZOMBIE, psutil.STATUS_DEAD]:
+                break
+            time.sleep(0.01)
         except:
             break
-
-        if time_use > time_limit or \
-           memory_use > memory_limit or \
-           proc.status() in [psutil.STATUS_ZOMBIE, psutil.STATUS_DEAD]:
-            break
-
-        time.sleep(0.01)
 
     kill_tree(proc)
 
     if time_use > time_limit:
-        print "Time limit exceeded"
+        verdict(False, "超时")
     if memory_use > memory_limit:
-        print "Memory limit exceeded"
+        verdict(False, "超内存")
 
-    print "%.2fs, %.2fMB" % (time_use, memory_use)
+    exit(0)

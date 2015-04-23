@@ -10,9 +10,9 @@ def get_filesystem_encoding():
     else:
         return 'utf-8'
 
-def get_processor_name():
+def get_system_info():
     if platform.system() == "Windows":
-        return platform.processor()
+        return platform.system() + ' ' + platform.release()
     elif platform.system() == "Darwin":
         command = ['sysctl', '-n', 'machdep.cpu.brand_string']
         return subprocess.check_output(command).strip()
@@ -60,6 +60,7 @@ def oi_texify_report(args):
 \usepackage{xltxtra,fontspec,xunicode}
 \usepackage[slantfont,boldfont]{xeCJK} 
 \usepackage{fancyhdr}
+\usepackage{multicol}
 \pagestyle{fancy}
 \lhead{}
 \chead{}
@@ -70,38 +71,50 @@ def oi_texify_report(args):
 \setCJKmainfont{SimSun}""")
 
     Tex = [TEX_HEADER, '\\begin{document}']
-    Tex.append('\\cfoot{--- {\\sf oiutils} and \XeTeX, %s ---}' % get_processor_name())
+    Tex.append('\\cfoot{--- {\\sf oiutils} and \XeTeX, %s ---}' % get_system_info())
     Tex.append('\\rhead{%s}' % cst)
-    Tex.append(u'\\section*{%s -- [选手：%s]}' % (meta['title'], cst))
+    Tex.append(u'\\section*{%s -- [%s]}' % (meta['title'], cst))
+    total_score = 0
     for prob in problems:
         prob_title = prob['name'] + ' (%s)' % prob['abbrv']
         fn = find_source(cst, prob)
+        prob_score = 0
         if fn is not None:
             log = compile_task(cst, prob)
             src_name = fn.split(os.path.sep)[-1]
             src = read_file(fn)
             md5 = hashlib.md5(src).hexdigest()[:6]
-            
+            Tex.append(u'\\subsection*{%s{\\normalsize\\dotfill\\tt %s (%s, %d字节)}}\n' % (prob_title, src_name, md5, len(src)))
+        Tex.append('\\begin{multicols}{2}')
+        if fn is not None:
             executable = '.'.join(log.split('.')[:-1] + ['exe'])
             compiled = os.path.isfile(executable)
-            Tex.append(u'\\subsection*{%s{\\normalsize\\dotfill\\tt %s (%s, %d字节)}}\n' % (prob_title, src_name, md5, len(src)))
             if compiled:
                 for (ti, case) in enumerate(prob['testcases']):
                     test = test_task(cst, prob, ti)
-                    Tex.append('Test Case \\# %d: ' % (ti+1))
-                    Tex.append(
-                    '%s\n'
-                    % read_file(test_task(cst, prob, ti))[:10])
+                    res = read_file(test_task(cst, prob, ti)).strip().split('\n')
+                    case_score = prob['score']
+                    if 'score' in case: case_score = case['score']
+                    case_score = int(float(case_score) * float(res[-1]))
+                    prob_score += case_score
+                    Tex.append(u'测试点\\#%d: ' % (ti+1))
+                    Tex.append(u'%s\\dotfill~%d分\n' % (res[-2], case_score))
+                total_score += prob_score
             else:
                 Tex.append(u'编译错误。')
         else:
             Tex.append(u'\\subsection*{%s}' % prob_title)
             Tex.append(u'找不到文件。')
+        Tex.append('\\end{multicols}')
+        Tex.append(u'\\hfill~本题得分： %d\n' % prob_score)
 
     Tex.append('\n\\vfill\n')
-    Tex.append(u'\n选手签字 \\underline{\\vspace{4cm}} 教师签字\n')
-    Tex.append(u'签字代表对评测结果确认无误。\n')
-    Tex.append('\n\\vspace{1cm}\n')
+    Tex.append(u'{\Large \\hfill总分: %d}\n' % total_score)
+    Tex.append(u'\\hfill\\begin{tabular}{r} \\vspace{1.5cm}\\hspace{4cm} \\\\ \\hline 选手确认签字\end{tabular}')
+    Tex.append('\\hspace{1em}')
+    Tex.append(u'\\begin{tabular}{r} \\vspace{1.5cm}\\hspace{4cm} \\\\ \\hline 指导教师确认签字\end{tabular}')
+    Tex.append('\n\\vspace{0.3cm}')
+    Tex.append(u'\\hfill签字即代表对此评测结果表示认可。')
 
     Tex.append('\\end{document}')
     write_file(os.path.join('report', cst + '.tex'), '\n'.join(Tex))

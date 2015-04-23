@@ -1,4 +1,14 @@
+# -*- coding: utf-8 -*-
 import argparse, tempfile, shutil, os
+
+def verdict(yes, msg):
+    print msg
+    if yes:
+        print "1.0"
+        exit(0)
+    else:
+        print "0.0"
+        exit(1)
 
 def oi_judge(args):
     if len(args) == 0: args = ['-h']
@@ -21,21 +31,24 @@ def oi_judge(args):
     try:
         shutil.copy(execfile, os.path.join(tmpdir, 'a.exe'))
     except:
-        print "Cannot find executable"
-        return
+        verdict(False, "找不到可执行文件")
 
     try:
         shutil.copy(infile, os.path.join(tmpdir, ifname))
     except:
-        print "Cannot create input file"
+        verdict(False, "读取输入文件失败")
 
-    os.system('cd "%s" && %s' %  (tmpdir, 'oi sandbox ./a.exe') )
+    ret = os.system('cd "%s" && %s' %  (tmpdir, 'oi sandbox ./a.exe') )
+    if ret != 0:
+        exit(ret)
 
     O = os.path.join(tmpdir, ofname)
     A = ansfile
     
     if not os.path.isfile(O) or not os.path.isfile(A):
-        print "No output"
-        return
+        verdict(False, "无输出")
 
-    os.system('oi fc "%s" "%s"' % (O, A))
+    ret = os.system('oi fc "%s" "%s"' % (O, A))
+    if ret != 0:
+        exit(ret)
+    verdict(True, "正确")

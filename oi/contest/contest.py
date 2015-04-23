@@ -73,11 +73,13 @@ def oi_run_contest(args):
                 for (ti, case) in enumerate(prob['testcases']):
                     test = test_task(cst, prob, ti)
                     all_tests.append(test)
-                    gen_dep(test, [compile_task(cst, prob)], [
+                    ifn = path_join(prob['path'], case['input'])
+                    ofn = path_join(prob['path'], case['output'])
+                     
+                    gen_dep(test, [compile_task(cst, prob), ifn, ofn], [
                         '-oi judge -i "%s" -o "%s" -I "%s" -O "%s" "%s" &> $@'
-                            % (prob['input'], prob['output'], 
-                               path_join(prob['path'], case['input']),
-                               path_join(prob['path'], case['output']),
+                            % (prob['input'], prob['output'],
+                               ifn, ofn,
                                compile_exec(cst, prob)
                                 ),
                     ])
@@ -112,4 +114,4 @@ def oi_run_contest(args):
 
     write_file("Makefile", '\n'.join(Makefile))
 
-    os.system("cd \"%s\" && make clean && make" % PATH)
+    os.system("cd \"%s\" && make" % PATH)
