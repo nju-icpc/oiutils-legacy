@@ -138,10 +138,13 @@ def interpretl(script):
     return [r[0 : center], r[center], r[center + 1 : rlen] ]
 
 def fscompare(a, b, s):
+    if s[0] != 's':
+        a = func_dict[s[0] ](a)
+        b = func_dict[s[0] ](b)
     if len(s) == 2:
         if a != b: verdict(False, "Mismatched")
     else:
-        if not s[2](func_dict[s[0] ](a), func_dict[s[0] ](b) ) : verdict(False, "Mismatched")
+        if not s[2](a, b) : verdict(False, "Mismatched")
 
 def scompare(a, b, s):
     if s[3]:
