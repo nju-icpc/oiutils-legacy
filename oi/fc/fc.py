@@ -10,13 +10,58 @@ def verdict(yes, msg):
         print "0.0"
         exit(1)
 
+def checkout_curline(r, cur_line):
+    cur_line[1] = cur_line[1].strip()
+    cur_line[1] = cur_line[1] or '1'
+    if cur_line[1] == '*':
+        cur_line[1] = '+'
+    if (cur_line[1] != '+' and not cur_line[1].isdigit() ):
+        verdict(False, 'Bad Comparison Script ([%s]%s)' % (cur_line[0], cur_line[1]) )
+    r.append(cur_line)
+
+def interpretl(script):
+    ccount = 0
+    r = []
+    state = 'idle'
+    cur_line = ['', '']
+
+    for i in xrange(len(script) ):
+        if (script[i] == '['):
+            ccount += 1
+            if (state == 'idle' or state == 'descriptor') and ccount == 1 :
+                if i != 0:
+                    checkout_curline(r, cur_line)
+                cur_line = ['', '']
+                state = 'inline'
+        elif (script[i] == ']'):
+            ccount -= 1
+            if state == 'inline' and ccount == 0:
+                state = 'descriptor'
+        elif state == 'descriptor' and ccount == 0:
+            cur_line[1] += script[i]
+        else:
+            if state == 'inline':
+                cur_line[0] += script[i]
+
+    checkout_curline(r, cur_line)
+
+    rlen = len(r)
+    center = rlen
+    for i in xrange(rlen):
+        if r[i][1] == '+':
+            center = i
+    r[center][1] = '+'
+
+    return [r[0 : center], r[center], r[center + 1 : rlen] ]
+
+
 """
 Compares two files line-by-line, with head and trailing whitespaces stripped out
 """
 def oi_fc(args):
     try:
         if len(args) == 0: args = ['-h']
-        parser = argparse.ArgumentParser(description = 'compile a source file.')
+        parser = argparse.ArgumentParser(description = 'compare files with comparison script')
         parser.add_argument('file1', help = 'the first file', nargs = 1)
         parser.add_argument('file2', help = 'the second file', nargs = 1)
         parser.add_argument('-s', help = 'the comparison script', default = '')
@@ -32,18 +77,24 @@ def oi_fc(args):
             with open(f2, "r") as fp:
                 L2 = fp.read()
         except:
-            verdict(False, "无输出")
+            verdict(False, "No Output")
 
         lines1 = [l.strip() for l in L1.strip().split('\n')]
         lines2 = [l.strip() for l in L2.strip().split('\n')]
 
         if len(lines1) != len(lines2):
-            verdict(False, "错误(行数不匹配)")
+            verdict(False, "Mismatched line numbers.")
+
+        cscript = options.get('s')
+        if cscript != '':
+            line_s = interpretl(cscript)
+            print line_s
 
         for i in range(0, len(lines1)):
+            print '"' + lines1[i] + '" "' + lines2[i] + '"'
             if lines1[i] != lines2[i]:
-                verdict(False, "错误")
+                verdict(False, "Mismatch.")
         exit(0)
     except Exception, e:
         print e
-        verdict(False, "出错")
+        verdict(False, "An error occurred, comparison interrupted.")
