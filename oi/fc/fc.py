@@ -39,7 +39,7 @@ def interprett(script):
     _FULL = False
     if script[0] == '!':
         _FULL = True
-        script.lstrip('!')
+        script = script.lstrip('!')
     ccount = 0
     r = []
     state = 'idle'
@@ -184,7 +184,7 @@ def oi_fc(args):
         parser = argparse.ArgumentParser(description = 'compare files with comparison script')
         parser.add_argument('file1', help = 'the first file', nargs = 1)
         parser.add_argument('file2', help = 'the second file', nargs = 1)
-        parser.add_argument('-s', help = 'the comparison script', default = '')
+        parser.add_argument('-s', help = 'the comparison script', default = '[s+]+')
         
         options = vars(parser.parse_args(args))
 
