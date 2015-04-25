@@ -14,6 +14,7 @@ func_dict = {
     'e' : lambda a:eval(a),
     's' : lambda a:str(a),
     'd' : lambda a:int(a),
+    'u' : lambda a:int(a),
     'f' : lambda a:float(a)
 }
 
@@ -35,7 +36,10 @@ def checkout_curtoken(r, cur_token):
 
 
 def interprett(script):
-    print "interpreting script", script
+    _FULL = False
+    if script[0] == '!':
+        _FULL = True
+        script.lstrip('!')
     ccount = 0
     r = []
     state = 'idle'
@@ -78,7 +82,7 @@ def interprett(script):
             center = i
     r[center][1] = '+'
 
-    return [r[0 : center], r[center], r[center + 1 : rlen] ]
+    return [r[0 : center], r[center], r[center + 1 : rlen] ,_FULL]
 
 
 def checkout_curline(r, cur_line):
@@ -133,6 +137,42 @@ def interpretl(script):
 
     return [r[0 : center], r[center], r[center + 1 : rlen] ]
 
+def fscompare(a, b, s):
+    if len(s) == 2:
+        if a != b: verdict(False, "Mismatched")
+    else:
+        if not s[2](func_dict[s[0] ](a), func_dict[s[0] ](b) ) : verdict(False, "Mismatched")
+
+def scompare(a, b, s):
+    if s[3]:
+        ta = [a]
+        tb = [b]
+    else:
+        ta = a.split()
+        tb = b.split()
+    if (len(ta) != len(tb) ): verdict(False, "Token count mismathed.")
+
+    lc = rc = 0
+    for i in xrange(len(s[0]) ):
+        lc += int(s[0][i][1])
+    for i in xrange(len(s[2]) ):
+        rc += int(s[2][i][1])
+    if (lc + rc > len(ta) ) : verdict(False, "No enough tokens to match your script.")
+
+    sa = 0
+    for i in xrange(len(s[0]) ):
+        for j in xrange(int(s[0][i][1]) ):
+            fscompare(ta[sa + j], tb[sa + j], s[0][i])
+        sa += int(s[0][i][1])
+
+    for i in xrange(lc, len(ta) - rc):
+        fscompare(ta[i], tb[i], s[1])
+
+    sb = -1
+    for i in xrange(len(s[2]) ):
+        for j in xrange(int(s[2][i][1]) ):
+            fscompare(ta[sb - j], tb[sb - j], s[2][i])
+        sb -= int(s[2][i][1])
 
 """
 Compares two files line-by-line, with head and trailing whitespaces stripped out
@@ -159,29 +199,37 @@ def oi_fc(args):
         except:
             verdict(False, "No Output")
 
-        lines1 = [l.strip() for l in L1.strip().split('\n')]
-        lines2 = [l.strip() for l in L2.strip().split('\n')]
+        lines1 = [l.strip('\r') for l in L1.strip().split('\n')]
+        lines2 = [l.strip('\r') for l in L2.strip().split('\n')]
 
         if len(lines1) != len(lines2):
             verdict(False, "Mismatched line numbers.")
 
         cscript = options.get('s')
         if cscript != '':
-            line_s = interpretl(cscript)
-            print line_s
+            s = interpretl(cscript)
             lc = rc = 0
-            for i in xrange(len(line_s[0]) ):
-                lc += int(line_s[0][i][1])
-            for i in xrange(len(line_s[2]) ):
-                rc += int(line_s[2][i][1])
-            print lc, rc
+            for i in xrange(len(s[0]) ):
+                lc += int(s[0][i][1])
+            for i in xrange(len(s[2]) ):
+                rc += int(s[2][i][1])
+            if (lc + rc > len(lines1) ) : verdict(False, "No enough lines to match your script.")
 
+            sa = 0
+            for i in xrange(len(s[0]) ):
+                for j in xrange(int(s[0][i][1]) ):
+                    scompare(lines1[sa + j], lines2[sa + j], s[0][i][0])
+                sa += int(s[0][i][1])
 
-        for i in range(0, len(lines1)):
-            print '"' + lines1[i] + '" "' + lines2[i] + '"'
-            if lines1[i] != lines2[i]:
-                verdict(False, "Mismatch.")
-        exit(0)
+            for i in xrange(lc, len(lines1) - rc):
+                scompare(lines1[i], lines2[i], s[1][0])
+
+            sb = -1
+            for i in xrange(len(s[2]) ):
+                for j in xrange(int(s[2][i][1]) ):
+                    scompare(lines1[sb - j], lines2[sb - j], s[2][i][0])
+                sb -= int(s[2][i][1])
+        verdict(True, "Matched.")
     except Exception, e:
         print e
         verdict(False, "An error occurred, comparison interrupted.")
