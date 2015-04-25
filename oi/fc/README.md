@@ -8,10 +8,10 @@ Syntax
 
 The syntax of fc scripts are shown below:
 
-* fc script: <line descriptors\>
-* line descriptor: [!(Optional)<token descriptors\>] <mark of repetition\>(Optional)
+* fc script: < line descriptors \>
+* line descriptor: [!(Optional)< token descriptors \>] < mark of repetition \>(Optional)
 	* If a line descriptor is started with symbol '!', the whole line is considered as a full token. Otherwise, lines are separated by whitespaces.
-* token descriptor: <token type\><compare function\><mark of repetition\>(Optional)
+* token descriptor: < token type \>< compare function \>< mark of repetition \>(Optional)
 * token type: The type of compared tokens, used as comparing types and parameters of compare funcions.
 	* currently supported token types:
 	1. s: string, by default.
