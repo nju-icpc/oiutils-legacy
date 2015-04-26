@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import argparse
+import argparse, traceback
 
 def verdict(yes, msg):
     print msg
@@ -171,11 +171,11 @@ def scompare(a, b, s):
     for i in xrange(lc, len(ta) - rc):
         fscompare(ta[i], tb[i], s[1])
 
-    sb = -1
+    sb = len(ta) - rc
     for i in xrange(len(s[2]) ):
         for j in xrange(int(s[2][i][1]) ):
-            fscompare(ta[sb - j], tb[sb - j], s[2][i])
-        sb -= int(s[2][i][1])
+            fscompare(ta[sb + j], tb[sb + j], s[2][i])
+        sb += int(s[2][i][1])
 
 """
 Compares two files line-by-line, with head and trailing whitespaces stripped out
@@ -227,12 +227,14 @@ def oi_fc(args):
             for i in xrange(lc, len(lines1) - rc):
                 scompare(lines1[i], lines2[i], s[1][0])
 
-            sb = -1
+            sb = len(lines1) - rc
             for i in xrange(len(s[2]) ):
                 for j in xrange(int(s[2][i][1]) ):
-                    scompare(lines1[sb - j], lines2[sb - j], s[2][i][0])
-                sb -= int(s[2][i][1])
+                    scompare(lines1[sb + j], lines2[sb + j], s[2][i][0])
+                sb += int(s[2][i][1])
         verdict(True, "Matched.")
     except Exception, e:
         print e
+        traceback.print_exc()
         verdict(False, "An error occurred, comparison interrupted.")
+
