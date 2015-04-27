@@ -109,7 +109,7 @@ def oi_texify_report(args):
         Tex.append(u'\\hfill~本题得分： %d\n\\vfill' % prob_score)
 
     Tex.append('\n\\vfill\n')
-    Tex.append(u'{\Large \\hfill总分: %d}\n' % total_score)
+    Tex.append(u'{\Large \\hfill 总分: %d}\n' % total_score)
     Tex.append(u'\\hfill\\begin{tabular}{r} \\vspace{1.5cm}\\hspace{4cm} \\\\ \\hline 选手确认签字\end{tabular}')
     Tex.append('\\hspace{1em}')
     Tex.append(u'\\begin{tabular}{r} \\vspace{1.5cm}\\hspace{4cm} \\\\ \\hline 指导教师确认签字\end{tabular}')
