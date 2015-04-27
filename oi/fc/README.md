@@ -23,13 +23,21 @@ Note that oi-fc does not resolve every problem. It is no more than an enhanced v
 
 ## Examples
 
-These examples matches the typical application scenarios of `oi-fc`. 
+These examples matches the typical application scenarios of `oi-fc`. Comparison is conducted line by line (`[]` encloses a description of a line), and token by token (`s`, `d`, `f` indicates a token and `{}` encloses the comparison function).
+
+Following are typical comparison scripts:
 
 * `[s+]+`: Split line with whitespaces and compare them, the default and most common approach.
 * `[!s]+`: Compare the whole line as a string, useful for ASCII arts or charts.
 * `[f{abs(a-b)<1e-5}+]+`: Compare floats with 1e-5 inaccuracy tolerance.
 * `[s2f{abs(a-b)<1e-5}2]+`: Mixed outputs like `Case #1: 1.000000 3.000001`.
 * `[s+]2[f{abs(a-b)<1e-5}+]+`: Two lines of string, remaining as floats.
+
+As the comparison function can be arbitrary valid Python lambda expression, one can also write more complicated scripts:
+
+* `[!s{ a.strip().upper() == b.strip().upper() }]`: Line comparison with letter case ignored.
+* `[!s{ sorted([int(i) for i in a.strip().split(" ")]) == sorted([int(i) for i in b.strip().split(" ")]) }]`: Comparing a line of unordered integers.
+
 
 ## FC-Script
 
