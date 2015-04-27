@@ -1,14 +1,11 @@
 import sys
-from config import *
+from oiutils import *
 
 def print_usage():
     print(
-"""Usage: oi command [arguments]")
-Supported commands:
-  sandbox - put a program run with resource limit
-  judge
-  run
-  texify""")
+"""Usage: oi command [arguments]
+Supported commands: """ + ', '.join(sorted([k for k in COMMANDS]))
+)
     exit(1)
 
 def main():
