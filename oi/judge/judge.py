@@ -54,5 +54,5 @@ def oi_judge(args):
 
     ret = os.system('oi fc "%s" "%s"' % (O, A))
     if ret != 0:
-        exit(ret)
+        verdict(False, "错误")
     verdict(True, "正确")

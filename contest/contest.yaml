@@ -98,46 +98,20 @@ testcases:
         input: plus2.in
         output: plus2.out
 ---
-name: '重复问题'
-abbrv: 'plus'
-path: 'testdata/plus/'
-input: 'plus.in'
-output: 'plus.out'
+name: '另一个题目'
+abbrv: 'play'
+path: 'testdata/play/'
+input: 'play.in'
+output: 'play.out'
 allowed_file:
-    - plus.c
-    - plus.cpp
-    - plus.pas
+    - play.c
+    - play.cpp
+    - play.pas
 time_limit: 1.0
 memory_limit: 512.0
-score: 10
+score: 100
 testcases:
     -
-        input: plus1.in
-        output: plus1.out
-    -
-        input: plus2.in
-        output: plus2.out
-    -
-        input: plus2.in
-        output: plus2.out
-    -
-        input: plus2.in
-        output: plus2.out
-    -
-        input: plus2.in
-        output: plus2.out
-    -
-        input: plus2.in
-        output: plus2.out
-    -
-        input: plus2.in
-        output: plus2.out
-    -
-        input: plus2.in
-        output: plus2.out
-    -
-        input: plus2.in
-        output: plus2.out
-    -
-        input: plus2.in
-        output: plus2.out
+        input: play.in
+        output: play.out
+        score: 99

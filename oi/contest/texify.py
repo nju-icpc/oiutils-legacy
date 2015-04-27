@@ -18,40 +18,10 @@ def get_system_info():
                 return re.sub( ".*model name.*:", "", line,1)
     return u"标准测试环境"
 
-def oi_texify_report(args):
-    PATH = '.'
+def oi_contest_texify(args):
+    contest = Contest(".")
     cst_raw = args[0]
     cst = unicode(args[0], get_filesystem_encoding())
-    YAML_FILE = os.path.join(PATH, 'contest.yaml')
-    PROGRAM_DIR = os.path.join('programs')
-
-    data = [i for i in yaml.load_all(open(YAML_FILE, "r").read())]
-    meta = data[0]
-    problems = data[1:]
-    Makefile = []
-
-    def find_source(directory, prob):
-        for fn in prob['allowed_file']:
-            fname = os.path.join(PATH, PROGRAM_DIR, directory, fn)
-            if os.path.isfile(fname):
-                return os.path.join(PROGRAM_DIR, directory, fn)
-        return None
-    
-    def get_contestants():
-        ret = [i for i in os.listdir(unicode(os.path.join(PATH, PROGRAM_DIR))) if not i.startswith('.')]
-        return ret
-
-    def read_file(fn):
-        with open(os.path.join(PATH, fn), "r") as fp:
-            return fp.read().decode('utf-8')
-
-    def read_file_raw(fn):
-         with open(os.path.join(PATH, fn), "r") as fp:
-            return fp.read()
-       
-    def write_file(fn, data):
-        with open(os.path.join(PATH, fn), "w") as fp:
-            fp.write(data.encode('utf-8'))
 
     TEX_HEADER = (
 """ % !Mode:: "TeX:UTF-8"
@@ -73,26 +43,26 @@ def oi_texify_report(args):
     Tex = [TEX_HEADER, '\\begin{document}']
 #    Tex.append('\\cfoot{--- {\\sf oiutils} and \XeTeX, %s ---}' % get_system_info())
     Tex.append('\\rhead{%s}' % cst)
-    Tex.append(u'\\section*{%s -- [%s]}' % (meta['title'], cst))
+    Tex.append(u'\\section*{%s -- [%s]}' % (contest.meta['title'], cst))
     total_score = 0
-    for prob in problems:
+    for prob in contest.problems:
         prob_title = prob['name'] + ' (%s)' % prob['abbrv']
-        fn = find_source(cst, prob)
+        fn = contest.find_source(cst, prob)
         prob_score = 0
         if fn is not None:
             log = compile_task(cst, prob)
             src_name = fn.split(os.path.sep)[-1]
-            src = read_file_raw(fn)
+            src = contest.read_file_raw(fn)
             md5 = hashlib.md5(src).hexdigest()[:6]
             Tex.append(u'\\subsection*{%s{\\normalsize~\\dotfill~\\tt %s (%s, %d字节)}}\n' % (prob_title, src_name, md5, len(src)))
         Tex.append('\\begin{multicols}{2}')
         if fn is not None:
             executable = '.'.join(log.split('.')[:-1] + ['exe'])
             compiled = os.path.isfile(executable)
-            if compiled:
+            if contest.find_executable(cst, prob) is not None:
                 for (ti, case) in enumerate(prob['testcases']):
                     test = test_task(cst, prob, ti)
-                    res = read_file(test_task(cst, prob, ti)).strip().split('\n')
+                    res = contest.read_file(test_task(cst, prob, ti)).strip().split('\n')
                     case_score = prob['score']
                     if 'score' in case: case_score = case['score']
                     case_score = int(float(case_score) * float(res[-1]))
@@ -115,7 +85,7 @@ def oi_texify_report(args):
     Tex.append(u'\\begin{tabular}{r} \\vspace{1.5cm}\\hspace{4cm} \\\\ \\hline 指导教师确认签字\end{tabular}')
 
     Tex.append('\\end{document}')
-    write_file(os.path.join('report', cst + '.tex'), '\n'.join(Tex))
+    contest.write_file(os.path.join('report', cst + '.tex'), '\n'.join(Tex))
     
     cmd = 'xelatex "%s.tex" < /dev/null &> /dev/null' % cst
     cmd = cmd.encode(get_filesystem_encoding())

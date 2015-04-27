@@ -7,6 +7,7 @@ COMMANDS = {
     'fc': 'fc.fc.oi_fc',
 
 # Programming contest hosting
-    'run': 'contest.contest.oi_run_contest',
-    'texify': 'contest.texify.oi_texify_report',
+    'contest-run': 'contest.run.oi_contest_run',
+    'contest-texify': 'contest.texify.oi_contest_texify',
+    'contest-ranklist': 'contest.ranklist.oi_contest_ranklist',
 }
