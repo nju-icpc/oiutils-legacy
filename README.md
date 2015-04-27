@@ -8,7 +8,7 @@ Oiutils is a collection of *portable* command-line tools for programming contest
 
 * oi-compile: compile a source code into binary. This script automatically tries to compile a single source file  into an executable using right compiler according to its file extension.
 * oi-sandbox: run any command with specified time and memory limit. Memory consumption and time usage are returned.
-* oi-fc (PLANNED): an enhanced version of cmp/diff that allow user to specify simple "fc scripts" to compare output files (e.g., comparing floats within certain error tolerance).
+* oi-fc: an enhanced version of cmp/diff that allow user to specify simple "fc scripts" to compare output files (e.g., comparing floats within certain error tolerance).
 * oi-judge: a simple script that (1) create a temporary directory, (2) put test input and executable in this directory, (3) run the executable with time and memory limit, and (4) calls an evaluation script to return judge results.
 
 ### Programming contest hosting
