@@ -2,6 +2,8 @@ Oiutils
 =======
 Oiutils is a collection of *portable* command-line tools for programming contest aid, program-based contest hosting and teaching support. We tried to keep every tool minimum, do one thing and do it well, and we encourage users piping these tools together to achieve their goals.
 
+Oiutils is designed to support grading system for Olympiad in Informatics in Jiangsu, as well as Online Judge backend at Nanjing University.
+
 ## Tools Overview
 
 ### Source code: compile and judge
@@ -31,3 +33,8 @@ Install using the following command:
 	python setup.py install
 
 There are a few dependences: pyyaml, psutil.
+
+
+## Credits
+
+`oi-fc` is implemented by [Zihan Xu](https://github.com/Sojiv).
