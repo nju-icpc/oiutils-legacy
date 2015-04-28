@@ -36,17 +36,17 @@ Following are typical comparison scripts:
 As the comparison function can be arbitrary valid Python lambda expression, one can also write more complicated scripts:
 
 * `[!s{ a.strip().upper() == b.strip().upper() }]`: Line comparison with letter case ignored.
-* `[!s{ sorted([int(i) for i in a.strip().split(" ")]) == sorted([int(i) for i in b.strip().split(" ")]) }]`: Comparing a line of unordered integers.
+* `[!s{ sorted([int(i) for i in a.strip().split(' ')]) == sorted([int(i) for i in b.strip().split(' ')]) }]`: Comparing a line of unordered integers.
 
 
 ## FC-Script
 
 ### Syntax
 
-* `<FCScript>` ::= `<LineDesc>``<LineDesc>` ...
-* `<LineDesc>` ::= `[``<TokenDesc>``<TokenDesc>` ... `]``<RepDesc>`
-* `<TokenDesc>` ::= `<TokenType>``<Lambda>``<RepDesc>`
-* `<TokenType>` ::= `!` | `s` | `d` | `u` | `f` | `e`
+* `<FCScript>` ::= `<LineDesc>` `<LineDesc>` ...
+* `<LineDesc>` ::= `[` `!` `<TokenDesc>` `<TokenDesc>` `...` `]` `<RepDesc>`
+* `<TokenDesc>` ::= `<TokenType>` `<Lambda>` `<RepDesc>`
+* `<TokenType>` ::= `s` | `d` | `u` | `f` | `e`
 * `<RepDesc>` ::= `<Empty>` | `+` | `1` | `2` | `3` | ...
 * `<Lambda>` ::= `<Empty>` | `{``<Code>``}`
 * `<Code>` ::= arbitrary python code snippet
@@ -56,16 +56,16 @@ As the comparison function can be arbitrary valid Python lambda expression, one 
 
 the `<FCScript>` is consisted of a listing of line descriptions (i.e., `<LineDesc>`s), while each line descriptor describes the comparison rule for a specific amount of lines.
 
-For each line descriptor, it specifies a list of token descriptors enclosed in brackets (list of `<TokenDesc>` and a repetition amount (`<RepDesc>`). 
+For each line descriptor, it specifies a list of token descriptors enclosed in brackets (list of `<TokenDesc>` and a repetition amount (`<RepDesc>`). If starts with `!`, the full line of source files will be considered as a single token. Otherwise, a line will be split to tokens with whitespaces as separators.
 
 A token descriptor is defined by three parts: (1) the type of that token `<TokenType>`; (2) the repetition amount of that token `<RepDesc>`; (3) an optional comparison script `<Lambda>`.
 
 #### Token types
 The following types are supported:
 
-* `!`: the entire line is treated as a string for comparison.
 * `s`: string, by default.
 * `d`, `u`, `f`: signed, unsigned integer and float. Note that integers can also be compared them using `s` (string comparison). Therefore, use `d` and `u` only if you are defining your own comparison function, as the default string comparator is much faster.
+* `j` : json object.
 * `e` : python object and scripts (unsafe, use them carefully).
 
 #### Repetition
