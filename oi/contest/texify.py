@@ -4,20 +4,6 @@
 import re, platform, os, subprocess, yaml, hashlib
 from contest import *
 
-def get_system_info():
-    if platform.system() == "Windows":
-        return platform.system() + ' ' + platform.release()
-    elif platform.system() == "Darwin":
-        command = ['sysctl', '-n', 'machdep.cpu.brand_string']
-        return subprocess.check_output(command).strip()
-    elif platform.system() == "Linux":
-        command = ['cat', '/proc/cpuinfo']
-        all_info = subprocess.check_output(command, shell=True).strip()
-        for line in all_info.split("\n"):
-            if "model name" in line:
-                return re.sub( ".*model name.*:", "", line,1)
-    return u"标准测试环境"
-
 def oi_contest_texify(args):
     contest = Contest(".")
     cst_raw = args[0]
@@ -41,9 +27,9 @@ def oi_contest_texify(args):
 \setCJKmainfont{SimSun}""")
 
     Tex = [TEX_HEADER, '\\begin{document}']
-#    Tex.append('\\cfoot{--- {\\sf oiutils} and \XeTeX, %s ---}' % get_system_info())
+    Tex.append('\\lhead{%s}' % contest.meta['title'])
     Tex.append('\\rhead{%s}' % cst)
-    Tex.append(u'\\section*{%s -- [%s]}' % (contest.meta['title'], cst))
+    Tex.append(u'\\section*{%s -- %s}' % (contest.meta['title'], cst))
     total_score = 0
     for prob in contest.problems:
         prob_title = prob['name'] + ' (%s)' % prob['abbrv']
