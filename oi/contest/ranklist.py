@@ -29,5 +29,4 @@ def oi_contest_ranklist(args):
         row.append(str(int(total_score)))
         Ranklist.append(row)
 
-    for row in Ranklist:
-        print '\t'.join(row)
+    contest.write_file('ranklist.csv', '\n'.join([','.join(row) for row in Ranklist]))

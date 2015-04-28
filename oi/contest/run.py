@@ -43,7 +43,7 @@ def oi_contest_run(args):
         with open(os.path.join(PATH, fn), "w") as fp:
             fp.write(data.encode('utf-8'))
 
-    gen_dep('all', ['init', 'compile', 'test', 'report'], [])
+    gen_dep('all', ['init', 'compile', 'test', 'report', 'ranklist.csv'], [])
     all_logs = []
     all_tests = []
 
@@ -93,7 +93,7 @@ def oi_contest_run(args):
         all_reports.append(rep)
                 
     gen_dep('init', [], [
-        '@mkdir -p compiled tested report',
+        '-@mkdir -p compiled tested report',
         '@echo === Compilation started ===',
     ], phony = True)
     gen_dep('compile', ['init'] + all_logs, [
@@ -102,8 +102,11 @@ def oi_contest_run(args):
     gen_dep('test', ['compile'] + all_tests, [
         '@echo === Report generation started ===',
     ], phony = True)
+    gen_dep('ranklist.csv', ['test'] + all_tests, [
+        'oi contest-ranklist'
+    ], phony = False)
     gen_dep('report', ['test'] + all_reports, [], phony = True)
-    gen_dep('clean', [], ['rm -rf tested compiled report'], phony = True)
+    gen_dep('clean', [], ['rm -rf tested compiled report ranklist.csv'], phony = True)
 
     write_file("Makefile", '\n'.join(Makefile))
 
