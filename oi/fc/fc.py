@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import argparse, traceback
+import argparse, traceback, json
 
 def verdict(yes, msg):
     print msg
@@ -15,7 +15,8 @@ func_dict = {
     's' : lambda a:str(a),
     'd' : lambda a:int(a),
     'u' : lambda a:int(a),
-    'f' : lambda a:float(a)
+    'f' : lambda a:float(a),
+    'j' : lambda a:json.loads(a)
 }
 
 
