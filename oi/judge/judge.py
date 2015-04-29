@@ -55,9 +55,9 @@ def oi_judge(args):
         verdict(False, "无输出")
 
     if 'fcs' in options:
+        fcs = options.get('fcs')
         cmd = ('oi fc "%s" "%s" -s \'%s\'' % (O, A, fcs))
-        print cmd
-        ret = os.system('oi fc "%s" "%s" -s \'%s\'' % (O, A, fcs))
+        ret = os.system(cmd)
     else:
         ret = os.system('oi fc "%s" "%s"' % (O, A))
     if ret != 0:
