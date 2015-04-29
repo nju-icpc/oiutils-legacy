@@ -31,6 +31,8 @@ def oi_judge(args):
     ofname = options.get('o')
     infile = options.get('I')
     ansfile = options.get('O')
+    fcs = options.get('fcs')
+    spj = options.get('spj')
     
     # copy useful files
     tmpdir = tempfile.mkdtemp()      # /tmp/abc123
@@ -54,9 +56,8 @@ def oi_judge(args):
     if not os.path.isfile(O) or not os.path.isfile(A):
         verdict(False, "无输出")
 
-    if 'fcs' in options:
-        fcs = options.get('fcs')
-        cmd = ('oi fc "%s" "%s" -s \'%s\'' % (O, A, fcs))
+    if fcs is not None:
+        cmd = ('oi fc "%s" "%s" -s "%s"' % (O, A, fcs))
         ret = os.system(cmd)
     else:
         ret = os.system('oi fc "%s" "%s"' % (O, A))

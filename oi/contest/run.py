@@ -69,7 +69,7 @@ def oi_contest_run(args):
                     ml = case.get('memory_limit', ml)
                      
                     if 'fc_script' in prob:
-                        fcs = '-fcs \'%s\'' % prob['fc_script'] + ' '
+                        fcs = '-fcs "%s"' % prob['fc_script'] + ' '
                     else:
                         fcs = ''
                 
