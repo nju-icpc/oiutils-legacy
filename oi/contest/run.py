@@ -68,11 +68,22 @@ def oi_contest_run(args):
                     tl = case.get('time_limit', tl)
                     ml = case.get('memory_limit', ml)
                      
+                    if 'fc_script' in prob:
+                        fcs = '-fcs \'%s\'' % prob['fc_script'] + ' '
+                    else:
+                        fcs = ''
+                
+                    if 'spj' in prob:
+                        spj = '-spj ' + prob['spj'] + ' '
+                    else:
+                        spj = ''
+                    
                     gen_dep(test, [compile_task(cst, prob), ifn, ofn], [
-                        '-oi judge -tl "%s" -ml "%s" -i "%s" -o "%s" -I "%s" -O "%s" "%s" &> $@'
+                        '-oi judge -tl "%s" -ml "%s" -i "%s" -o "%s" -I "%s" -O "%s" %s "%s" &> $@'
                             % (tl, ml,
                                prob['input'], prob['output'],
                                ifn, ofn,
+                               fcs + spj,
                                compile_exec(cst, prob)
                                 ),
                     ])

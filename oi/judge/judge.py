@@ -19,6 +19,8 @@ def oi_judge(args):
     parser.add_argument('-O', help = 'answer file path')
     parser.add_argument('-i', help = 'input file name (can be stdin)')
     parser.add_argument('-o', help = 'output file name (can be stdout)')
+    parser.add_argument('-spj', help = 'special judge executable')
+    parser.add_argument('-fcs', help = 'comparison script')
     parser.add_argument('execfile', help = 'the executable', nargs = 1)
     options = vars(parser.parse_args(args))
 
@@ -52,7 +54,12 @@ def oi_judge(args):
     if not os.path.isfile(O) or not os.path.isfile(A):
         verdict(False, "无输出")
 
-    ret = os.system('oi fc "%s" "%s"' % (O, A))
+    if 'fcs' in options:
+        cmd = ('oi fc "%s" "%s" -s \'%s\'' % (O, A, fcs))
+        print cmd
+        ret = os.system('oi fc "%s" "%s" -s \'%s\'' % (O, A, fcs))
+    else:
+        ret = os.system('oi fc "%s" "%s"' % (O, A))
     if ret != 0:
         verdict(False, "错误")
     verdict(True, "正确")
