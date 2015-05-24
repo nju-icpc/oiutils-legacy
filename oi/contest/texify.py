@@ -28,7 +28,12 @@ def oi_contest_texify(args):
 
     Tex = [TEX_HEADER, '\\begin{document}']
     Tex.append('\\lhead{%s}' % contest.meta['title'])
-    Tex.append('\\rhead{%s}' % cst)
+    contestants = contest.meta.get('contestants', {})
+    if cst in contestants:
+        rhead = contestants[cst] + '~' + cst
+    else:
+        rhead = cst
+    Tex.append('\\rhead{%s}' % rhead)
     Tex.append(u'\\section*{%s -- %s}' % (contest.meta['title'], cst))
     total_score = 0
     for prob in contest.problems:
