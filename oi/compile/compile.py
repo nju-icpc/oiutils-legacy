@@ -40,8 +40,10 @@ def oi_compile(args):
 
         shutil.copy(fname, tmpdir)
         
-        print compile_cmd(opt, src)
-        os.system('cd "%s" && %s' % (tmpdir, compile_cmd(opt, src)) )
+        cwd = os.getcwd()
+        os.chdir(tmpdir)
+        os.system('%s' % (compile_cmd(opt, src)) )
+        os.chdir(cwd)
         exe = os.path.join(tmpdir, 'a.exe')
         shutil.copy(exe, dest)
     except:

@@ -46,9 +46,12 @@ def oi_judge(args):
     except:
         verdict(False, "读取输入文件失败")
 
-    ret = os.system('cd "%s" && %s' %  (tmpdir, 'oi sandbox -t "%s" -m "%s" ./a.exe' % (tl, ml)) )
+    cwd = os.getcwd()
+    os.chdir(tmpdir)
+    ret = os.system('%s' %  ('oi sandbox -t "%s" -m "%s" ./a.exe' % (tl, ml)) )
     if ret != 0:
         exit(ret)
+    os.chdir(cwd)
 
     O = os.path.join(tmpdir, ofname)
     A = ansfile
