@@ -79,7 +79,7 @@ def oi_contest_run(args):
                         spj = ''
                     
                     gen_dep(test, [compile_task(cst, prob), ifn, ofn], [
-                        '-oi judge -tl "%s" -ml "%s" -i "%s" -o "%s" -I "%s" -O "%s" %s "%s" &> $@'
+                        '-oi judge -tl "%s" -ml "%s" -i "%s" -o "%s" -I "%s" -O "%s" %s "%s" > $@'
                             % (tl, ml,
                                prob['input'], prob['output'],
                                ifn, ofn,

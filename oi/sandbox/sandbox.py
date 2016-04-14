@@ -32,7 +32,7 @@ def oi_sandbox(args):
     if (len(options.get('args')) == 0):
         parser.parse_args(['-h'])
         
-    p = subprocess.Popen(options.get('args'), shell = False)
+    p = subprocess.Popen(options.get('args'), stdout = open('/dev/null', 'w'), stderr = open('/dev/null', 'w'), shell = False)
     proc = psutil.Process(p.pid)
 
     start_time = time.time()

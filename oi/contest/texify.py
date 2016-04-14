@@ -24,7 +24,7 @@ def oi_contest_texify(args):
 \\cfoot{}
 \\rfoot{}%{\\thepage}
 \setlength{\parindent}{0cm}
-\setCJKmainfont{SimSun}""")
+\setCJKmainfont{WenQuanYi Zen Hei}""")
 
     Tex = [TEX_HEADER, '\\begin{document}']
     Tex.append('\\lhead{%s}' % contest.meta['title'])
