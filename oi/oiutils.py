@@ -10,4 +10,8 @@ COMMANDS = {
     'contest-run': 'contest.run.oi_contest_run',
     'contest-texify': 'contest.texify.oi_contest_texify',
     'contest-ranklist': 'contest.ranklist.oi_contest_ranklist',
+
+# Remote file sending and receiving
+    'send': 'sendrecv.send.oi_send',
+    'receive': 'sendrecv.receive.oi_receive',
 }

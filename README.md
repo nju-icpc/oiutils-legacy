@@ -37,3 +37,8 @@ There are a few dependences: pyyaml, psutil.
 ## Credits
 
 * `oi-fc` is implemented by [Zihan Xu](https://github.com/Sojiv).
+
+## Future
+
+* Collecting/distributing files (send & receive)
+* Seat arrangements
