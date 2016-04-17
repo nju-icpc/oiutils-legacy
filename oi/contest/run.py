@@ -54,7 +54,7 @@ def oi_contest_run(args):
                 log = compile_task(cst, prob)
                 all_logs.append(log)
                 gen_dep(log, [fn], [
-                    '-oi compile $< -o $(@:.log=.exe) &> $@' # do compile here
+                    '-oi compile $< -o $(@:.log=.exe) 2>&1 > $@' # do compile here
                 ])
                 for (ti, case) in enumerate(prob['testcases']):
                     test = test_task(cst, prob, ti)
@@ -79,7 +79,7 @@ def oi_contest_run(args):
                         spj = ''
                     
                     gen_dep(test, [compile_task(cst, prob), ifn, ofn], [
-                        '-oi judge -tl "%s" -ml "%s" -i "%s" -o "%s" -I "%s" -O "%s" %s "%s" &> $@'
+                        '-oi judge -tl "%s" -ml "%s" -i "%s" -o "%s" -I "%s" -O "%s" %s "%s" > $@'
                             % (tl, ml,
                                prob['input'], prob['output'],
                                ifn, ofn,
@@ -114,7 +114,7 @@ def oi_contest_run(args):
         '@echo === Report generation started ===',
     ], phony = True)
     gen_dep('ranklist.csv', ['test'] + all_tests, [
-        'oi contest-ranklist'
+        '@oi contest-ranklist'
     ], phony = False)
     gen_dep('report', ['test'] + all_reports, [], phony = True)
     gen_dep('clean', [], ['rm -rf tested compiled report ranklist.csv'], phony = True)
