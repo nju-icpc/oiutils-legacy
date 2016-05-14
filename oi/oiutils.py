@@ -14,4 +14,7 @@ COMMANDS = {
 # Remote file sending and receiving
     'send': 'sendrecv.send.oi_send',
     'receive': 'sendrecv.receive.oi_receive',
+
+# Contest scheduling
+    'sched': 'sched.sched.oi_sched',
 }

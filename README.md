@@ -41,4 +41,4 @@ There are a few dependences: pyyaml, psutil.
 ## Future
 
 * Collecting/distributing files (send & receive)
-* Seat arrangements
+* Scheduling a contest, e.g., Seat arrangements (oi sched)

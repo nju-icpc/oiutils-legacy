@@ -19,6 +19,9 @@ def test_task(cst, prob, tid):
 def report_task(cst):
     return path_join('report', '%s.pdf' % cst)
 
+def summary_task(cst):
+    return path_join('tested', '%s_summary.log' % (cst))
+
 def path_join(*args):
     return '/'.join(args)
 

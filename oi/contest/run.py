@@ -10,7 +10,6 @@ def oi_contest_run(args):
     YAML_FILE = os.path.join(PATH, 'contest.yaml')
     PROGRAM_DIR = path_join('programs')
 
-
     data = [i for i in yaml.load_all(open(YAML_FILE, "r").read())]
     meta = data[0]
     problems = data[1:]
@@ -48,6 +47,21 @@ def oi_contest_run(args):
     all_tests = []
 
     for cst in get_contestants():
+        report_dep = []
+
+        for prob in problems:
+            fn = find_source(cst, prob)
+            if fn is not None:
+                for (ti, case) in enumerate(prob['testcases']):
+                    report_dep.append(test_task(cst, prob, ti))
+
+        summary = summary_task(cst)
+        gen_dep(summary, report_dep, [
+            '@echo Summary "%s"' % cst,
+            '@touch $@',
+        ])
+        all_tests.append(summary)
+
         for prob in problems:
             fn = find_source(cst, prob)
             if fn is not None:
@@ -86,6 +100,7 @@ def oi_contest_run(args):
                                fcs + spj,
                                compile_exec(cst, prob)
                                 ),
+
                     ])
 
     all_reports = []
@@ -102,7 +117,8 @@ def oi_contest_run(args):
             'oi contest-texify "%s" -o $@' % cst # generate report
         ])
         all_reports.append(rep)
-                
+
+
     gen_dep('init', [], [
         '-@mkdir -p compiled tested report',
         '@echo === Compilation started ===',
@@ -122,3 +138,5 @@ def oi_contest_run(args):
     write_file("Makefile", '\n'.join(Makefile))
 
     os.system("cd \"%s\" && make" % PATH)
+
+    # Start a GUI
