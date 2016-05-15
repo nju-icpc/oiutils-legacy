@@ -54,6 +54,7 @@ def oi_sandbox(args):
 
     kill_tree(proc)
 
+    print "Time: %.2fs, Memory: %.2fM" % (time_use, memory_use)
     if time_use > time_limit:
         verdict(False, "超时")
     if memory_use > memory_limit:

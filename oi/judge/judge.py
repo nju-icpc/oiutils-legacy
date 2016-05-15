@@ -1,7 +1,14 @@
 # -*- coding: utf-8 -*-
 import argparse, tempfile, shutil, os
 
+
+def deltmp():
+    global tmpdir
+    if tmpdir is not None:
+        shutil.rmtree(tmpdir, ignore_errors = True)
+
 def verdict(yes, msg):
+    deltmp()
     print msg
     if yes:
         print "1.0"
@@ -11,6 +18,7 @@ def verdict(yes, msg):
         exit(1)
 
 def oi_judge(args):
+    global tmpdir
     if len(args) == 0: args = ['-h']
     parser = argparse.ArgumentParser(description = 'judge a file with input and output')
     parser.add_argument('-tl', help = 'time limit (seconds)', default = '1')
@@ -50,6 +58,7 @@ def oi_judge(args):
     os.chdir(tmpdir)
     ret = os.system('%s' %  ('oi sandbox -t "%s" -m "%s" ./a.exe' % (tl, ml)) )
     if ret != 0:
+        deltmp()
         exit(ret)
     os.chdir(cwd)
 
