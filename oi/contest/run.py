@@ -57,8 +57,7 @@ def oi_contest_run(args):
 
         summary = summary_task(cst)
         gen_dep(summary, report_dep, [
-            '@echo Summary "%s"' % cst,
-            '@touch $@',
+            'tail -n 1 -q $^ > $@',
         ])
         all_tests.append(summary)
 
