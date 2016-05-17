@@ -1,11 +1,5 @@
 import argparse, tempfile, os, shutil
 
-COMPILERS = {
-    'c': 'gcc',
-    'cpp': 'g++',
-    'pas': 'fpc',
-}
-
 # compile should generate "a.exe" on the same directory
 def compile_cmd(options, src):
     ext = src.split('.')[-1]         # cpp
