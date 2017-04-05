@@ -1,7 +1,7 @@
 # Routing table for supported oi utility programs
 COMMANDS = {
 # Source code and online judge utilities
-	'compile': 'compile.compile.oi_compile',
+    'compile': 'compile.compile.oi_compile',
     'sandbox': 'sandbox.sandbox.oi_sandbox',
     'judge': 'judge.judge.oi_judge',
     'fc': 'fc.fc.oi_fc',
@@ -12,8 +12,7 @@ COMMANDS = {
     'contest-ranklist': 'contest.ranklist.oi_contest_ranklist',
 
 # Remote file sending and receiving
-    'send': 'sendrecv.send.oi_send',
-    'receive': 'sendrecv.receive.oi_receive',
+    'remote': 'remote.remote.oi_remote',
 
 # Contest scheduling
     'sched': 'sched.sched.oi_sched',
