@@ -9,6 +9,7 @@ setup(
         'oi.sandbox',
         'oi.compile',
         'oi.judge',
+        'oi.remote',
         'oi.fc'],
     install_requires = [
         'pyyaml', 'psutil'
