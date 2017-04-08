@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
-import argparse, tempfile, shutil, os
 
+import argparse, tempfile, shutil, os, subprocess, sys
+from subprocess import PIPE
+
+def execute(*args):
+    p = subprocess.Popen(args)
+    p.communicate()
+    return p.returncode
 
 def deltmp():
     global tmpdir
@@ -62,17 +68,22 @@ def oi_judge(args):
         exit(ret)
     os.chdir(cwd)
 
+    I = infile
     O = os.path.join(tmpdir, ofname)
     A = ansfile
     
     if not os.path.isfile(O) or not os.path.isfile(A):
         verdict(False, "无输出")
 
-    if fcs is not None:
-        cmd = ('oi fc "%s" "%s" -s "%s"' % (O, A, fcs))
-        ret = os.system(cmd)
+    if spj is not None:
+        execute(spj, I, O, A)
+        deltmp()
+        return
+    elif fcs is not None:
+        ret = execute("oi", "fc", O, A, "-s", fcs)
     else:
-        ret = os.system('oi fc "%s" "%s"' % (O, A))
+        ret = execute("oi", "fc", O, A)
     if ret != 0:
         verdict(False, "错误")
     verdict(True, "正确")
+    deltmp()
