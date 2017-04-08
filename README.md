@@ -1,6 +1,6 @@
 Oiutils
 =======
-Oiutils is a collection of *portable* command-line tools for programming contest aid, program-based contest hosting and teaching support. We tried to keep every tool minimum, do one thing and do it well, and we encourage users piping these tools together to achieve their goals.
+Oiutils is a collection of *portable* command-line tools for programming contest aid, program-based contest hosting and teaching support. We tried to keep every tool minimum, do one thing and do it well, and we encourage users pipelining these tools together to achieve their goals.
 
 Oiutils is designed to support grading system for Olympiad in Informatics in Jiangsu, as well as Online Judge backend at Nanjing University.
 
@@ -14,10 +14,12 @@ Oiutils is designed to support grading system for Olympiad in Informatics in Jia
 * **oi-judge**: a simple script that (1) create a temporary directory, (2) put test input and executable in this directory, (3) run the executable with time and memory limit, and (4) calls an evaluation script to return judge results.
 
 ### Programming contest hosting
-* **oi-run**: synthesize a Makefile for a specified contest recipie and programmer's submissions. Everything (including dependency) is managed by the Makefile: the source compilation task, test runs for each test case, and ranklist generation. A few interesting features:
-	1. The Makefile is *incremental* such that an entire ACM-ICPC  contest can be hosted using this procedure by repeatedly invoking `oi-run` when new submissions are arrived.
-	2. Redjuging is greatly simplified: modifying a test data yields all test runs depending on it to be re-executed, and invoking `make` manages the rejudge automatically.
-	3. Judging reports can be generated for each individual contestant, which are useful in a formal OI contest.  
+* **oi-contest**: synthesize a Makefile for a specified contest recipie and programmer's submissions. Everything (including dependency) is managed by the Makefile: the source compilation task, test runs for each test case, and ranklist generation. A few interesting features:
+ 1. The Makefile is *incremental* such that an entire ACM-ICPC  contest can be hosted using this procedure by repeatedly invoking `oi contest-run` when new submissions are arrived.
+ 2. Redjuging is greatly simplified: modifying a test data yields all test runs depending on it to be re-executed, and invoking `make` manages the rejudge automatically.
+ 3. Judging reports can be generated for each individual contestant, which are useful in a formal OI contest.  
+* **oi-remote**: a simple wrapper for ssh/scp for uploading, downloading, or execute remote commands. Useful for distributing files and collecting submissions.
+* **oi-sched**: invokes a SAT solver to solve for each contestant's placement.
 
 ### Source code: contestant aids
 

@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+# Special judge: -spj spj_executable_path
+#    spj inflie(path) outfile(path) ansfile(path)
+#    they may not be in the same directory.
+#    should never break infile and ansfile.
+
 import argparse, tempfile, shutil, os, subprocess, sys
 from subprocess import PIPE
 
