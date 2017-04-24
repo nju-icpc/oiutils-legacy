@@ -16,4 +16,7 @@ COMMANDS = {
 
 # Contest scheduling
     'sched': 'sched.sched.oi_sched',
+
+# Visual interface
+    'vis': 'visual.visual.oi_visual',
 }
