@@ -1,3 +1,0 @@
-[console_scripts]
-oi = oi.cli:main
-
