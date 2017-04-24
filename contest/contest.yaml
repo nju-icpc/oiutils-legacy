@@ -115,3 +115,7 @@ testcases:
         input: play.in
         output: play.out
         score: 99
+    -
+        input: play1.in
+        output: play1.out
+        score: 100

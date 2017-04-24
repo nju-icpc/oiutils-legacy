@@ -15,6 +15,7 @@ def main():
     if cmd not in COMMANDS: print_usage()
 
     f = ['oi'] + COMMANDS[cmd].split('.')
+
     mod = __import__('.'.join(f[:-1]), fromlist=[''])
     func = mod.__dict__[f[-1]]
 

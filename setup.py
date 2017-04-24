@@ -11,12 +11,19 @@ setup(
         'oi.compile',
         'oi.judge',
         'oi.remote',
-        'oi.fc'],
+        'oi.fc',
+        'oi.visual'],
+    package_data = {
+        'oi.visual': [
+            'templates/*.html', 'static/js/*.js', 'static/css/*.css',
+        ],
+    },
     install_requires = [
-        'pyyaml', 'psutil'
+        'pyyaml', 'psutil', 'flask',
     ],
-    entry_points = '''
-        [console_scripts]
-        oi = oi.cli:main
-    '''
+    entry_points = {
+        'console_scripts': [
+            'oi = oi.cli:main',        
+        ],
+    }
 )

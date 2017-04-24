@@ -15,6 +15,18 @@ def oi_contest_run(args):
     problems = data[1:]
     Makefile = []
 
+    with open('oi.log', 'w') as fp:
+        fp.write(str(len(problems)) + '\n')
+        for prob in problems:
+            fp.write(prob['abbrv']);
+            for (ti, case) in enumerate(prob['testcases']):
+                if 'score' in case:
+                    fp.write('-' + str(case['score']))
+                else:
+                    fp.write('-' + str(prob['score']))
+            fp.write('\n')
+
+
     def find_source(directory, prob):
         for fn in prob['allowed_file']:
             fname = os.path.join(PATH, PROGRAM_DIR, directory, fn)
@@ -67,7 +79,8 @@ def oi_contest_run(args):
                 log = compile_task(cst, prob)
                 all_logs.append(log)
                 gen_dep(log, [fn], [
-                    '-oi compile $< -o $(@:.log=.exe) 2>&1 > $@' # do compile here
+                    '-oi compile $< -o $(@:.log=.exe) 2>&1 > $@', # do compile here
+                    'echo ' + cst + '-' + prob['abbrv'] + '-compiling >> oi.log', # write into log
                 ])
                 for (ti, case) in enumerate(prob['testcases']):
                     test = test_task(cst, prob, ti)
@@ -100,6 +113,7 @@ def oi_contest_run(args):
                                compile_exec(cst, prob)
                                 ),
 
+                        'echo %s-%s-%s-`tail $@ -n 1 -q` >> oi.log' % (cst, prob['abbrv'], ti),
                     ])
 
     all_reports = []
@@ -132,7 +146,7 @@ def oi_contest_run(args):
         '@oi contest-ranklist'
     ], phony = False)
     gen_dep('report', ['test'] + all_reports, [], phony = True)
-    gen_dep('clean', [], ['rm -rf tested compiled report ranklist.csv'], phony = True)
+    gen_dep('clean', [], ['rm -rf tested compiled report ranklist.csv oi.log'], phony = True)
 
     write_file("Makefile", '\n'.join(Makefile))
 
